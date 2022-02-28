@@ -15,4 +15,21 @@ module.exports = (async () => {
   };
 
   const typesense = new Typesense.Client(TYPESENSE_CONFIG);
+
+  const schema = {
+    name: "datasets",
+    num_documents: 0,
+    fields: [
+      {
+        name: "title",
+        type: "string",
+        facet: false,
+      },
+      {
+        name: "description",
+        type: "string",
+        facet: false,
+      },
+    ],
+  };
 })();
