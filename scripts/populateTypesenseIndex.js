@@ -21,6 +21,11 @@ module.exports = (async () => {
     num_documents: 0,
     fields: [
       {
+        name: "identifier",
+        type: "string",
+        facet: false,
+      },
+      {
         name: "title",
         type: "string",
         facet: false,
