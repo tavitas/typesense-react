@@ -30,6 +30,75 @@ module.exports = (async () => {
         type: "string",
         facet: false,
       },
+      {
+        name: "isPartOf",
+        type: "string",
+        facet: false,
+      },
+      // the theme field will store one or more strings - each string option will need to be specified in the schema as well
+      {
+        name: "theme",
+        type: "string[]",
+        facet: true,
+      },
+      /**
+       * All datasets have at least 1 theme but can have up to 7
+       * "Atmosphere and Climate",
+       * "Land",
+       * "Biodiversity",
+       * "Built Environment",
+       * "Coastal and Marine",
+       * "Culture and Heritage",
+       * "Inland Waters"
+       */
+      // theme.lvl0 refers to the mandatory theme and subsequent theme.lvl* refers to additional themes a dataset has
+      {
+        name: "theme.lvl0",
+        type: "string[]",
+        facet: true,
+      },
+      {
+        name: "theme.lvl1",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
+      {
+        name: "theme.lvl2",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
+      {
+        name: "theme.lvl3",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
+      {
+        name: "theme.lvl4",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
+      {
+        name: "theme.lvl5",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
+      {
+        name: "theme.lvl6",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
+      {
+        name: "theme.lvl7",
+        type: "string[]",
+        facet: true,
+        optional: true,
+      },
     ],
   };
 })();
