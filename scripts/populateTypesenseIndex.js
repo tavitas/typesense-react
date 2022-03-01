@@ -26,6 +26,16 @@ module.exports = (async () => {
         facet: false,
       },
       {
+        name: "issued",
+        type: "string",
+        facet: false,
+      },
+      {
+        name: "modified",
+        type: "string",
+        facet: false,
+      },
+      {
         name: "title",
         type: "string",
         facet: false,
@@ -34,9 +44,15 @@ module.exports = (async () => {
         name: "description",
         type: "string",
         facet: false,
+        optional: true,
       },
       {
         name: "isPartOf",
+        type: "string",
+        facet: false,
+      },
+      {
+        name: "landingPage",
         type: "string",
         facet: false,
       },
@@ -61,6 +77,7 @@ module.exports = (async () => {
         name: "theme.lvl0",
         type: "string[]",
         facet: true,
+        optional: true,
       },
       {
         name: "theme.lvl1",
@@ -105,5 +122,68 @@ module.exports = (async () => {
         optional: true,
       },
     ],
+
+    // default sort by title field
+    // default_sorting_field: "identifier",
   };
+
+  const datasets = require("./data/data.json");
+
+  try {
+    const collection = await typesense.collections("datasets").retrieve();
+    console.log("Found existing collection of datasets");
+    console.log(JSON.stringify(collection, null, 2));
+
+    if (collection.num_documents !== datasets.length) {
+      console.log("Collection has a different number of documents than data");
+      console.log("Deleting collection");
+      await typesense.collections("datasets").delete();
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  console.log("Creating schema...");
+  console.log(JSON.stringify(schema, null, 2));
+
+  await typesense.collections().create(schema);
+
+  console.log("Populating collection...");
+
+  // delete the fields we don't want to index
+  datasets.forEach(async (dataset) => {
+    delete dataset.license;
+    delete dataset.language;
+    delete dataset.references;
+    delete dataset.spatial;
+    delete dataset.temporal;
+    delete dataset.relevantCountries;
+    delete `dataset.@type`;
+    delete dataset.accessLevel;
+    delete dataset.publisher;
+    delete dataset.keyword;
+    delete dataset.rights;
+    delete dataset.accrualPeriodicity;
+    delete dataset.contactPoint;
+    delete dataset.describedBy;
+    delete dataset.describedByType;
+    delete dataset.conformsTo;
+    delete dataset.distribution;
+    delete dataset.describedBy;
+
+    dataset.theme.forEach((theme, idx) => {
+      dataset[`theme.lvl${idx}`] = [dataset.theme.slice(0, idx + 1).join(">")];
+    });
+  });
+
+  try {
+    const returnData = await typesense
+      .collections("datasets")
+      .documents()
+      .import(datasets);
+
+    console.log("Return data: ", returnData);
+  } catch (error) {
+    console.error(error);
+  }
 })();
