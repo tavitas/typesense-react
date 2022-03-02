@@ -1,9 +1,8 @@
 import "./App.css";
 import styled from "styled-components";
-import { InstantSearch, SearchBox } from "react-instantsearch-dom";
+import { InstantSearch, SearchBox, Pagination } from "react-instantsearch-dom";
 import { searchClient } from "./typesenseAdapter";
 import DatasetHits from "./components/datasetHits";
-import RefinementList from "react-instantsearch-dom/dist/cjs/components/RefinementList";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -23,8 +22,8 @@ function App() {
         </h2>
         <h4>Search Datasets</h4>
         <SearchBox />
-        {/* <RefinementList attribute='theme' /> */}
         <DatasetHits />
+        <Pagination />
       </InstantSearch>
     </AppContainer>
   );
